@@ -31,11 +31,15 @@ setTimeout(function(){
 
 function Watcher(file){
 	fs.watchFile(PrivateDir+file, { interval: 500 }, (curr, prev) => {
-		fs.readFile(PrivateDir+file, function(err, data) {
-			fs.writeFile(PublickDir+file, EEncode(data.toString()), function (err) {
-			  if (err) throw err;
-				console.log(file+' file Changed and saved to '+PublickDir+file);
-			});
-		})
+		if (fs.existsSync(PrivateDir+file)) {
+			fs.readFile(PrivateDir+file, function(err, data) {
+				fs.writeFile(PublickDir+file, EEncode(data.toString()), function (err) {
+				  if (err) throw err;
+					console.log(file+' file Changed and saved to '+PublickDir+file);
+				});
+			})
+		} else {
+			console.log(file+' file removed')
+		}
 	});
 }
